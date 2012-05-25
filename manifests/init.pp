@@ -11,6 +11,9 @@
 #
 # Parameters:
 #
+#   $build_essential_version = $global_lib::params::build_essential_version,
+#   $vim_version             = $global_lib::params::vim_version
+#
 # Actions:
 #
 #   Installs general purpose packages on the server.
@@ -22,15 +25,24 @@
 #   include global_lib
 #
 # [Remember: No empty lines between comments and class definition]
-class global_lib {
+class global_lib (
 
-  include global_lib::params
+  $build_essential_version = $global_lib::params::build_essential_version,
+  $vim_version             = $global_lib::params::vim_version
+)
+inherits global_lib::params {
 
   #-----------------------------------------------------------------------------
 
-  if $global_lib::params::build_essential_version {
+  if $build_essential_version {
     package { 'build-essential':
-      ensure => $global_lib::params::build_essential_version;
+      ensure => $build_essential_version,
+    }
+  }
+
+  if $vim_version {
+    package { 'vim':
+      ensure => $vim_version,
     }
   }
 }
