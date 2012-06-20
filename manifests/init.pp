@@ -28,7 +28,8 @@
 class global_lib (
 
   $build_essential_version = $global_lib::params::build_essential_version,
-  $vim_version             = $global_lib::params::vim_version
+  $vim_version             = $global_lib::params::vim_version,
+  $unzip_version           = $global_lib::params::unzip_version,
 )
 inherits global_lib::params {
 
@@ -43,6 +44,12 @@ inherits global_lib::params {
   if $vim_version {
     package { 'vim':
       ensure => $vim_version,
+    }
+  }
+
+  if $unzip_version {
+    package { 'unzip':
+      ensure => $unzip_version,
     }
   }
 }
