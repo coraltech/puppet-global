@@ -1,0 +1,3 @@
+<% facts.each do |name, value| -%>
+export FACTER_<%= name -%>='<%= value -%>'
+<% end -%>

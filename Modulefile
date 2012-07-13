@@ -6,4 +6,5 @@ license 'ASL 2.0'
 project_page 'http://github.com/coraltech/puppet-global_lib'
 source 'git://github.com/coraltech/puppet-global_lib.git'
 summary 'General purpose package module'
-description 'Installs general purpose packages that do not fit neatly into other Puppet bundles'
+description 'Installs misc packages and utilities that (so far) do not fit neatly into specialized bundles.  
+It also creates and manages custom Facter facts that are loaded through Puppet and the user environment.'

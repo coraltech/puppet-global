@@ -3,6 +3,8 @@ class global_lib::params {
 
   #-----------------------------------------------------------------------------
 
+  $facts = {}
+
   case $::operatingsystem {
     debian: {}
     ubuntu: {
@@ -14,6 +16,8 @@ class global_lib::params {
 
       $unzip_package           = 'unzip'
       $unzip_version           = '6.0-4ubuntu1'
+
+      $fact_environment        = '/etc/profile.d/facts.sh'
     }
     centos, redhat: {}
   }
