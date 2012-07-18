@@ -2,5 +2,6 @@
   "global_facts" : {},
   "global_build_essential_ensure" : "present",
   "global_vim_ensure" : "present",
-  "global_unzip_ensure" : "present"
+  "global_unzip_ensure" : "present",
+  "facts_template" : "global_lib/facts.sh.erb"
 }

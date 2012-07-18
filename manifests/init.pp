@@ -33,6 +33,7 @@ class global_lib (
   $unzip_ensure               = $global_lib::params::unzip_ensure,
   $os_fact_environment        = $global_lib::params::os_fact_environment,
   $facts                      = $global_lib::params::facts,
+  $facts_template             = $global_lib::params::facts_template,
 
 ) inherits global_lib::params {
 
@@ -68,7 +69,7 @@ class global_lib (
   if $fact_environment and ! empty($facts) {
     file { $fact_environment:
       ensure  => file,
-      content => template('global_lib/facts.sh.erb'),
+      content => template($facts_template),
     }
   }
 }
