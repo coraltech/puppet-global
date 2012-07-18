@@ -33,7 +33,7 @@ class global_lib (
   $unzip_ensure               = $global_lib::params::unzip_ensure,
   $os_fact_environment        = $global_lib::params::os_fact_environment,
   $facts                      = $global_lib::params::facts,
-  $facts_template             = $global_lib::params::facts_template,
+  $facts_template             = $global_lib::params::os_facts_template,
 
 ) inherits global_lib::params {
 
