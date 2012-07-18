@@ -2,22 +2,32 @@
 class global_lib::params {
 
   #-----------------------------------------------------------------------------
+  # General configurations
 
-  $facts = {}
+  if $::hiera_exists {
+    $facts                  = hiera('global_facts', $global_lib::default::facts)
+    $build_essential_ensure = hiera('global_build_essential_ensure', $global_lib::default::build_essential_ensure)
+    $vim_ensure             = hiera('global_vim_ensure', $global_lib::default::vim_ensure)
+    $unzip_ensure           = hiera('global_unzip_ensure', $global_lib::default::unzip_ensure)
+  }
+  else {
+    $facts                  = $global_lib::default::facts
+    $build_essential_ensure = $global_lib::default::build_essential_ensure
+    $vim_ensure             = $global_lib::default::vim_ensure
+    $unzip_ensure           = $global_lib::default::unzip_ensure
+  }
+
+  #-----------------------------------------------------------------------------
+  # Operating System specific configurations
 
   case $::operatingsystem {
     debian: {}
     ubuntu: {
-      $build_essential_package = 'build-essential'
-      $build_essential_version = '11.5ubuntu2'
+      $os_build_essential_package = 'build-essential'
+      $os_vim_package             = 'vim'
+      $os_unzip_package           = 'unzip'
 
-      $vim_package             = 'vim'
-      $vim_version             = '2:7.3.429-2ubuntu2'
-
-      $unzip_package           = 'unzip'
-      $unzip_version           = '6.0-4ubuntu1'
-
-      $fact_environment        = '/etc/profile.d/facts.sh'
+      $os_fact_environment        = '/etc/profile.d/facts.sh'
     }
     centos, redhat: {}
   }
