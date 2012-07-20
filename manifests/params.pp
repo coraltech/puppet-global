@@ -1,10 +1,12 @@
 
 class global_lib::params {
 
+  include global_lib::default
+
   #-----------------------------------------------------------------------------
   # General configurations
 
-  if $::hiera_exists {
+  if $::hiera_ready {
     $facts                  = hiera('global_facts', $global_lib::default::facts)
     $build_essential_ensure = hiera('global_build_essential_ensure', $global_lib::default::build_essential_ensure)
     $vim_ensure             = hiera('global_vim_ensure', $global_lib::default::vim_ensure)
