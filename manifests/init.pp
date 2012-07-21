@@ -1,4 +1,4 @@
-# Class: global_lib
+# Class: global
 #
 #   This module installs misc packages and utilities that do not fit
 #   neatly into specialized bundles.  It also creates and manages custom
@@ -20,56 +20,83 @@
 #
 # Sample Usage:
 #
-#   include global_lib
+#   include global
 #
 # [Remember: No empty lines between comments and class definition]
-class global_lib (
+class global (
 
-  $os_build_essential_package = $global_lib::params::os_build_essential_package,
-  $build_essential_ensure     = $global_lib::params::build_essential_ensure,
-  $os_vim_package             = $global_lib::params::os_vim_package,
-  $vim_ensure                 = $global_lib::params::vim_ensure,
-  $os_unzip_package           = $global_lib::params::os_unzip_package,
-  $unzip_ensure               = $global_lib::params::unzip_ensure,
-  $os_fact_environment        = $global_lib::params::os_fact_environment,
-  $facts                      = $global_lib::params::facts,
-  $facts_template             = $global_lib::params::os_facts_template,
+  $packages                    = $global::params::os_packages,
+  $fact_environment            = $global::params::os_fact_environment,
+  $facts                       = $global::params::facts,
+  $facts_template              = $global::params::os_facts_template,
 
-) inherits global_lib::params {
+) inherits global::params {
 
-  $fact_environment           = $global_lib::params::os_fact_environment
+  include stdlib
 
   #-----------------------------------------------------------------------------
-  # Installation
+  # Installation / Removal
 
-  if $build_essential_ensure {
-    package { 'build-essential':
-      name   => $global_lib::params::os_build_essential_package,
-      ensure => $build_essential_ensure,
-    }
-  }
+  # The stdlib high level stages are (in order):
+  #
+  #  * setup
+  #  * main
+  #  * runtime
+  #  * setup_infra
+  #  * deploy_infra
+  #  * setup_app
+  #  * deploy_app
+  #  * deploy
 
-  if $vim_ensure {
-    package { 'vim':
-      name   => $global_lib::params::os_vim_package,
-      ensure => $vim_ensure,
-    }
-  }
+  $stages = [
+    'setup',
+    'main',
+    'runtime',
+    'setup_infra',
+    'deploy_infra',
+    'setup_app',
+    'deploy_app',
+    'deploy'
+  ]
 
-  if $unzip_ensure {
-    package { 'unzip':
-      name   => $global_lib::params::os_unzip_package,
-      ensure => $unzip_ensure,
-    }
+  global::stage { $stages:
+    packages => $packages,
   }
 
   #-----------------------------------------------------------------------------
   # Configuration
 
   if $fact_environment and ! empty($facts) {
-    file { $fact_environment:
-      ensure  => file,
+    file { 'fact-environment':
+      path    => $fact_environment,
       content => template($facts_template),
+      stage   => 'setup',
+    }
+  }
+}
+
+#-------------------------------------------------------------------------------
+
+define global::stage ( $stage = $name, $packages = [] ) {
+
+  $states = keys($packages[$stage])
+
+  global::state { $states:
+    packages => $packages,
+    stage    => $stage,
+  }
+}
+
+#-------------------------------------------------------------------------------
+
+define global::state ( $ensure = $name, $packages = [], $stage = 'main' ) {
+
+  $package_names = $packages[$stage][$ensure]
+
+  if ! empty($package_names) {
+    package { $package_names:
+      ensure => $ensure,
+      stage  => $stage,
     }
   }
 }
