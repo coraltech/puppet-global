@@ -1,1 +1,1 @@
-include global_lib
+include global
