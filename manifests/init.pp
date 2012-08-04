@@ -91,7 +91,7 @@ define global::stage ( $run_stage = $name, $packages = [] ) {
 
 define global::state ( $ensure = $name, $packages = [], $run_stage = 'main' ) {
 
-  $package_names = $packages[$stage][$ensure]
+  $package_names = $packages[$run_stage][$ensure]
 
   if ! empty($package_names) {
     package { $package_names:
