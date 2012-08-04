@@ -9,6 +9,8 @@ class global::build (
 
 ) {
 
+  include git
+
   $test_install_cmd = "diff ${repo}/.git/_COMMIT ${repo}/.git/_COMMIT.last"
 
   #-----------------------------------------------------------------------------
