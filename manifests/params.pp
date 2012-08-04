@@ -25,10 +25,10 @@ class global::params {
       }
 
       $os_fact_environment = '/etc/profile.d/facts.sh'
-      $os_facts_template   = 'global_lib/facts.sh.erb'
+      $os_facts_template   = 'global/facts.sh.erb'
     }
     default: {
-      fail("The global_lib module is not currently supported on ${::operatingsystem}")
+      fail("The global module is not currently supported on ${::operatingsystem}")
     }
   }
 }
