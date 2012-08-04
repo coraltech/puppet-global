@@ -77,26 +77,26 @@ class global (
 
 #-------------------------------------------------------------------------------
 
-define global::stage ( $stage = $name, $packages = [] ) {
+define global::stage ( $run_stage = $name, $packages = [] ) {
 
   $states = keys($packages[$stage])
 
   global::state { $states:
-    packages => $packages,
-    stage    => $stage,
+    packages  => $packages,
+    run_stage => $run_stage,
   }
 }
 
 #-------------------------------------------------------------------------------
 
-define global::state ( $ensure = $name, $packages = [], $stage = 'main' ) {
+define global::state ( $ensure = $name, $packages = [], $run_stage = 'main' ) {
 
   $package_names = $packages[$stage][$ensure]
 
   if ! empty($package_names) {
     package { $package_names:
       ensure => $ensure,
-      stage  => $stage,
+      stage  => $run_stage,
     }
   }
 }
