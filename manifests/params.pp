@@ -7,10 +7,18 @@ class global::params {
   # General configurations
 
   if $::hiera_ready {
-    $facts = hiera('global_facts', $global::default::facts)
+    $setup_ensure   = hiera('global_setup_ensure', $global::default::setup_ensure)
+    $ensure         = hiera('global_ensure', $global::default::ensure)
+    $runtime_ensure = hiera('global_runtime_ensure', $global::default::runtime_ensure)
+    $build_ensure   = hiera('global_build_ensure', $global::default::build_ensure)
+    $facts          = hiera('global_facts', $global::default::facts)
   }
   else {
-    $facts = $global::default::facts
+    $setup_ensure   = $global::default::setup_ensure
+    $ensure         = $global::default::ensure
+    $runtime_ensure = $global::default::runtime_ensure
+    $build_ensure   = $global::default::build_ensure
+    $facts          = $global::default::facts
   }
 
   #-----------------------------------------------------------------------------
@@ -18,11 +26,10 @@ class global::params {
 
   case $::operatingsystem {
     debian, ubuntu: {
-      $os_packages = {
-        'main'   => {
-          'present' => [ 'build-essential', 'vim', 'unzip' ],
-        },
-      }
+      $os_setup_packages   = []
+      $os_packages         = [ 'vim', 'unzip' ]
+      $os_runtime_packages = []
+      $os_build_packages   = [ 'build-essential' ]
 
       $os_fact_environment = '/etc/profile.d/facts.sh'
       $os_facts_template   = 'global/facts.sh.erb'

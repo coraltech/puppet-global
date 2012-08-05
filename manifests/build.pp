@@ -1,11 +1,13 @@
 
-class global::build (
+define global::build (
 
-  $repo        = $name,
-  $source      = '',
-  $revision    = 'master',
-  $dev_package = '',
-  $dev_ensure  = 'present',
+  $repo           = $name,
+  $source         = '',
+  $revision       = 'master',
+  $dev_packages   = [],
+  $dev_ensure     = 'present',
+  $build_packages = $global::params::os_build_packages,
+  $build_ensure   = $global::params::build_ensure,
 
 ) {
 
@@ -16,15 +18,25 @@ class global::build (
   #-----------------------------------------------------------------------------
   # Installation
 
-  package { "${name}-dev":
-    name   => $dev_package,
-    ensure => $dev_ensure,
+  if ! defined(Class['global::build::setup']) {
+    class { 'global::build::setup':
+      packages => $build_packages,
+      ensure   => $build_ensure,
+    }
   }
 
+  package { "${name}-dev":
+    name    => $dev_packages,
+    ensure  => $dev_ensure,
+    require => Class['global::build::setup'],
+  }
+
+  #---
+
   git::repo { $repo:
-    source   => $source,
-    revision => $revision,
-    require  => Package["${name}-dev"],
+    source    => $source,
+    revision  => $revision,
+    require   => Package["${name}-dev"],
   }
 
   Exec {
@@ -58,5 +70,26 @@ class global::build (
     path      => "${repo}/.git/_COMMIT.last",
     source    => "${repo}/.git/_COMMIT",
     subscribe => Exec["make-install-${name}"],
+  }
+}
+
+#-------------------------------------------------------------------------------
+# Internal build setup class
+
+class global::build::setup (
+
+  $packages = [],
+  $ensure   = 'present',
+
+) {
+
+  #-----------------------------------------------------------------------------
+  # Installation
+
+  if ! empty($packages) {
+    package { 'global-build-packages':
+      name   => $packages,
+      ensure => $ensure,
+    }
   }
 }

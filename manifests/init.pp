@@ -25,7 +25,12 @@
 # [Remember: No empty lines between comments and class definition]
 class global (
 
+  $setup_packages              = $global::params::os_setup_packages,
+  $setup_ensure                = $global::params::setup_ensure,
   $packages                    = $global::params::os_packages,
+  $ensure                      = $global::params::ensure,
+  $runtime_packages            = $global::params::os_runtime_packages,
+  $runtime_ensure              = $global::params::runtime_ensure,
   $fact_environment            = $global::params::os_fact_environment,
   $facts                       = $global::params::facts,
   $facts_template              = $global::params::os_facts_template,
@@ -35,68 +40,26 @@ class global (
   include stdlib
 
   #-----------------------------------------------------------------------------
-  # Installation / Removal
+  # Installation
 
-  # The stdlib high level stages are (in order):
-  #
-  #  * setup
-  #  * main
-  #  * runtime
-  #  * setup_infra
-  #  * deploy_infra
-  #  * setup_app
-  #  * deploy_app
-  #  * deploy
-
-  $stages = [
-    'setup',
-    'main',
-    'runtime',
-    'setup_infra',
-    'deploy_infra',
-    'setup_app',
-    'deploy_app',
-    'deploy'
-  ]
-
-  global::stage { $stages:
-    packages => $packages,
+  class { 'global::setup':
+    packages         => $setup_packages,
+    ensure           => $setup_ensure,
+    fact_environment => $fact_environment,
+    facts            => $facts,
+    facts_template   => $facts_template,
+    stage            => 'setup',
   }
 
-  #-----------------------------------------------------------------------------
-  # Configuration
-
-  if $fact_environment and ! empty($facts) {
-    file { 'fact-environment':
-      path    => $fact_environment,
-      content => template($facts_template),
-      stage   => 'setup',
-    }
-  }
-}
-
-#-------------------------------------------------------------------------------
-
-define global::stage ( $run_stage = $name, $packages = [] ) {
-
-  $states = keys($packages[$stage])
-
-  global::state { $states:
-    packages  => $packages,
-    run_stage => $run_stage,
-  }
-}
-
-#-------------------------------------------------------------------------------
-
-define global::state ( $ensure = $name, $packages = [], $run_stage = 'main' ) {
-
-  $package_names = $packages[$run_stage][$ensure]
-
-  if ! empty($package_names) {
-    package { $package_names:
+  if ! empty($packages) {
+    package { $packages:
       ensure => $ensure,
-      stage  => $run_stage,
     }
+  }
+
+  class { 'global::runtime':
+    packages => $runtime_packages,
+    ensure   => $runtime_ensure,
+    stage    => 'runtime',
   }
 }
