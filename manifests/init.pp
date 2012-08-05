@@ -43,12 +43,9 @@ class global (
   # Installation
 
   class { 'global::setup':
-    packages         => $setup_packages,
-    ensure           => $setup_ensure,
-    fact_environment => $fact_environment,
-    facts            => $facts,
-    facts_template   => $facts_template,
-    stage            => 'setup',
+    packages => $setup_packages,
+    ensure   => $setup_ensure,
+    stage    => 'setup',
   }
 
   if ! empty($packages) {
@@ -61,5 +58,15 @@ class global (
     packages => $runtime_packages,
     ensure   => $runtime_ensure,
     stage    => 'runtime',
+  }
+
+  #-----------------------------------------------------------------------------
+  # Configuration
+
+  if $fact_environment and ! empty($facts) {
+    file { 'fact-environment':
+      path    => $fact_environment,
+      content => template($facts_template),
+    }
   }
 }
