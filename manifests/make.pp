@@ -67,6 +67,7 @@ define global::make (
   file { "save-${name}":
     path      => "${repo}/.git/_COMMIT.last",
     source    => "${repo}/.git/_COMMIT",
+    require   => Exec["check-${name}"],
     subscribe => Exec["make-install-${name}"],
   }
 }
