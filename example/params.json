@@ -1,7 +1,12 @@
 {
-  "setup_ensure" : "present",
-  "ensure" : "present",
-  "runtime_ensure" : "present",
-  "build_ensure" : "present",
-  "global_facts" : {}
+  "global_setup_ensure" : "present",
+  "global_build_ensure" : "present",
+  "global_common_ensure" : "present",
+  "global_runtime_ensure" : "present",  
+  "global_facts" : {},
+  "global_make_revision" : "master",
+  "global_make_dev_ensure" : "present",
+  "global_make_user" : "root",
+  "global_make_group" : "root",
+  "global_make_options" : ""
 }

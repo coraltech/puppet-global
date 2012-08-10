@@ -27,8 +27,10 @@ class global (
 
   $setup_packages              = $global::params::os_setup_packages,
   $setup_ensure                = $global::params::setup_ensure,
-  $packages                    = $global::params::os_packages,
-  $ensure                      = $global::params::ensure,
+  $build_packages              = $global::params::os_build_packages,
+  $build_ensure                = $global::params::build_ensure,
+  $common_packages             = $global::params::os_common_packages,
+  $common_ensure               = $global::params::common_ensure,
   $runtime_packages            = $global::params::os_runtime_packages,
   $runtime_ensure              = $global::params::runtime_ensure,
   $fact_environment            = $global::params::os_fact_environment,
@@ -48,9 +50,17 @@ class global (
     stage    => 'setup',
   }
 
-  if ! empty($packages) {
-    package { $packages:
-      ensure => $ensure,
+  if ! empty($build_packages) {
+    package { 'build-packages':
+      name   => $build_packages,
+      ensure => $build_ensure,
+    }
+  }
+
+  if ! empty($common_packages) {
+    package { 'common-packages':
+      name   => $common_packages,
+      ensure => $common_ensure,
     }
   }
 
