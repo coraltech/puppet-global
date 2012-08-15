@@ -25,17 +25,17 @@
 # [Remember: No empty lines between comments and class definition]
 class global (
 
-  $setup_packages              = $global::params::os_setup_packages,
-  $setup_ensure                = $global::params::setup_ensure,
-  $build_packages              = $global::params::os_build_packages,
-  $build_ensure                = $global::params::build_ensure,
-  $common_packages             = $global::params::os_common_packages,
-  $common_ensure               = $global::params::common_ensure,
-  $runtime_packages            = $global::params::os_runtime_packages,
-  $runtime_ensure              = $global::params::runtime_ensure,
-  $fact_environment            = $global::params::os_fact_environment,
-  $facts                       = $global::params::facts,
-  $facts_template              = $global::params::os_facts_template,
+  $setup_packages   = $global::params::setup_packages,
+  $setup_ensure     = $global::params::setup_ensure,
+  $build_packages   = $global::params::build_packages,
+  $build_ensure     = $global::params::build_ensure,
+  $common_packages  = $global::params::common_packages,
+  $common_ensure    = $global::params::common_ensure,
+  $runtime_packages = $global::params::runtime_packages,
+  $runtime_ensure   = $global::params::runtime_ensure,
+  $fact_environment = $global::params::fact_environment,
+  $facts            = $global::params::facts,
+  $facts_template   = $global::params::facts_template,
 
 ) inherits global::params {
 
