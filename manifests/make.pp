@@ -14,8 +14,6 @@ define global::make (
 
   include git
 
-  $test_diff_cmd = "diff ${repo}/.git/_COMMIT ${repo}/.git/_COMMIT.last"
-
   #-----------------------------------------------------------------------------
   # Installation
 
@@ -28,12 +26,13 @@ define global::make (
   #---
 
   git::repo { $repo:
-    home      => '',
-    source    => $source,
-    revision  => $revision,
-    user      => $user,
-    group     => $group,
-    require   => Package["${name}-dev"],
+    home          => '',
+    source        => $source,
+    revision      => $revision,
+    user          => $user,
+    group         => $group,
+    require       => Package["${name}-dev"],
+    update_notify => Exec["configure-${name}"],
   }
 
   Exec {
@@ -43,31 +42,18 @@ define global::make (
   }
 
   exec {
-    "check-${name}":
-      command   => "git rev-parse HEAD > ${repo}/.git/_COMMIT",
-      require   => Class['git'],
-      subscribe => Git::Repo[$repo];
-
     "configure-${name}":
-      command   => "${repo}/configure ${options}",
-      unless    => $test_diff_cmd,
-      subscribe => Exec["check-${name}"];
+      command     => "${repo}/configure ${options}",
+      refreshonly => true;
 
     "make-${name}":
-      command   => 'make',
-      unless    => $test_diff_cmd,
-      subscribe => Exec["configure-${name}"];
+      command     => 'make',
+      refreshonly => true,
+      subscribe   => Exec["configure-${name}"];
 
     "make-install-${name}":
-      command   => 'make install',
-      unless    => $test_diff_cmd,
-      subscribe => Exec["make-${name}"];
-  }
-
-  file { "save-${name}":
-    path      => "${repo}/.git/_COMMIT.last",
-    source    => "${repo}/.git/_COMMIT",
-    require   => Exec["check-${name}"],
-    subscribe => Exec["make-install-${name}"],
+      command     => 'make install',
+      refreshonly => true,
+      subscribe   => Exec["make-${name}"];
   }
 }
