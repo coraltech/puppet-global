@@ -16,6 +16,6 @@ If no value is found in the defined sources, it returns an empty string ('')
 
     Puppet::Parser::Functions.autoloader.loadall
     
-    return function_unique(function_module_param(args[0], args[1], 'hash'))
+    return function_module_param([ args[0], args[1], 'hash' ])
   end
 end

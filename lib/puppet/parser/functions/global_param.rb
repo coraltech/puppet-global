@@ -43,7 +43,7 @@ If no value is found in the defined sources, it returns an empty string ('')
     end
 
     value = lookupvar("::#{var_name}") if (value == :undefined || value == '')
-    value = lookupvar("::common::#{var_name}") if (value == :undefined || value == '')
+    value = lookupvar("::data::common::#{var_name}") if (value == :undefined || value == '')
     value = default_value if (value == :undefined || value == '')
     
     return value

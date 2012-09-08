@@ -16,6 +16,6 @@ If no value is found in the defined sources, it returns an empty string ('')
 
     Puppet::Parser::Functions.autoloader.loadall
     
-    return function_unique(function_global_param(args[0], args[1], 'array'))
+    return function_unique([ function_global_param([ args[0], args[1], 'array' ]) ])
   end
 end
