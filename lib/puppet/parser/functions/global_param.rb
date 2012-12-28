@@ -31,7 +31,7 @@ If no value is found in the defined sources, it returns an empty string ('')
     default_value = ( args[1] ? args[1] : '' )
     context       = ( args[2] ? args[2] : '' )
     
-    if function_hiera_is_available
+    if function_config_initialized()
       case context
       when 'array'
         value = function_hiera_array("#{var_name}",'')
