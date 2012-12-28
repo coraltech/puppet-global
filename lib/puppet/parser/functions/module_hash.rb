@@ -14,8 +14,6 @@ If no value is found in the defined sources, it returns an empty string ('')
     raise(Puppet::ParseError, "module_hash(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
 
-    Puppet::Parser::Functions.autoloader.loadall
-    
     return function_module_param([ args[0], args[1], 'hash' ])
   end
 end

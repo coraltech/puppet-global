@@ -21,6 +21,8 @@ If no value is found in the defined sources, it returns an empty string ('')
 
     raise(Puppet::ParseError, "module_param(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
+      
+    Puppet::Parser::Functions.autoloader.loadall
 
     value         = ''
     var_name      = args[0]
@@ -29,7 +31,7 @@ If no value is found in the defined sources, it returns an empty string ('')
     
     module_name   = parent_module_name
     
-    if function_hiera_is_available
+    if function_config_initialized()
       hiera_property = "#{module_name}_#{var_name}"
       
       case context
@@ -41,7 +43,7 @@ If no value is found in the defined sources, it returns an empty string ('')
         value = function_hiera(hiera_property,'')
       end
     end
-
+    
     value = lookupvar("::#{module_name}::default::#{var_name}") if ( value == :undefined || value == '' )
     value = default_value if ( value == :undefined || value == '' )
     
