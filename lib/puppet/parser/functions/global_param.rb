@@ -5,7 +5,7 @@
 # following this order
 # - Hiera backend, if present (no prefix)
 # - ::varname
-# - ::common::varname
+# - ::data::common::varname
 # - {default parameter}
 #
 # Inspired by example42 -> params_lookup.rb
@@ -31,7 +31,7 @@ If no value is found in the defined sources, it returns an empty string ('')
     default_value = ( args[1] ? args[1] : '' )
     context       = ( args[2] ? args[2] : '' )
     
-    if function_config_initialized()
+    if function_config_initialized
       case context
       when 'array'
         value = function_hiera_array("#{var_name}",'')
