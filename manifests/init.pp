@@ -25,17 +25,24 @@
 # [Remember: No empty lines between comments and class definition]
 class global (
 
-  $setup_packages   = $global::params::setup_packages,
-  $setup_ensure     = $global::params::setup_ensure,
-  $build_packages   = $global::params::build_packages,
-  $build_ensure     = $global::params::build_ensure,
-  $common_packages  = $global::params::common_packages,
-  $common_ensure    = $global::params::common_ensure,
-  $runtime_packages = $global::params::runtime_packages,
-  $runtime_ensure   = $global::params::runtime_ensure,
-  $fact_environment = $global::params::fact_environment,
-  $facts            = $global::params::facts,
-  $facts_template   = $global::params::facts_template,
+  $setup_packages           = $global::params::setup_packages,
+  $setup_ensure             = $global::params::setup_ensure,
+  $build_packages           = $global::params::build_packages,
+  $build_ensure             = $global::params::build_ensure,
+  $common_packages          = $global::params::common_packages,
+  $common_ensure            = $global::params::common_ensure,
+  $runtime_packages         = $global::params::runtime_packages,
+  $runtime_ensure           = $global::params::runtime_ensure,
+  $fact_environment         = $global::params::fact_environment,
+  $facts                    = $global::params::facts,
+  $facts_template           = $global::params::facts_template,
+  $apt_always_apt_update    = $global::params::apt_always_apt_update,
+  $apt_disable_keys         = $global::params::apt_disable_keys,
+  $apt_proxy_host           = $global::params::apt_proxy_host,
+  $apt_proxy_port           = $global::params::apt_proxy_port,
+  $apt_purge_sources_list   = $global::params::apt_purge_sources_list,
+  $apt_purge_sources_list_d = $global::params::apt_purge_sources_list_d,
+  $apt_purge_preferences_d  = $global::params::apt_purge_preferences_d
 
 ) inherits global::params {
 
@@ -45,9 +52,16 @@ class global (
   # Installation
 
   class { 'global::setup':
-    packages => $setup_packages,
-    ensure   => $setup_ensure,
-    stage    => 'setup',
+    packages                 => $setup_packages,
+    ensure                   => $setup_ensure,
+    apt_always_apt_update    => $apt_always_apt_update,
+    apt_disable_keys         => $apt_disable_keys,
+    apt_proxy_host           => $apt_proxy_host,
+    apt_proxy_port           => $apt_proxy_port,
+    apt_purge_sources_list   => $apt_purge_sources_list,
+    apt_purge_sources_list_d => $apt_purge_sources_list_d,
+    apt_purge_preferences_d  => $apt_purge_preferences_d,
+    stage                    => 'setup',
   }
 
   if ! empty($build_packages) {
