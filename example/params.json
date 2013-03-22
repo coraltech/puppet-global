@@ -8,5 +8,12 @@
   "global_make_dev_ensure" : "present",
   "global_make_user" : "root",
   "global_make_group" : "root",
-  "global_make_options" : ""
+  "global_make_options" : "",
+  "global_apt_always_apt_update" : "false",
+  "global_apt_disable_keys" : "undef",
+  "global_apt_proxy_host" : "false",
+  "global_apt_proxy_port" : "8080",
+  "global_apt_purge_sources_list" : "false",
+  "global_apt_purge_sources_list_d" : "false",
+  "global_apt_purge_preferences_d" : "false"
 }
