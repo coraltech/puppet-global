@@ -10,12 +10,15 @@
 #
 # Inspired by example42 -> params_lookup.rb
 #
+
+require File.join(File.dirname(__FILE__), 'utility')
+
 module Puppet::Parser::Functions
   newfunction(:global_param, :type => :rvalue, :doc => <<-EOS
 This function performs a lookup for a variable value in various locations following this order:
 - Hiera backend, if present (no prefix)
 - ::varname
-- ::common::varname
+- ::data::common::varname
 - {default parameter}
 If no value is found in the defined sources, it returns an empty string ('')
     EOS
@@ -34,11 +37,11 @@ If no value is found in the defined sources, it returns an empty string ('')
     if function_config_initialized
       case context
       when 'array'
-        value = function_hiera_array("#{var_name}",'')
+        value = function_hiera_array("#{var_name}", '')
       when 'hash'
-        value = function_hiera_hash("#{var_name}",'')
+        value = function_hiera_hash("#{var_name}", '')
       else
-        value = function_hiera("#{var_name}",'')
+        value = function_hiera("#{var_name}", '')
       end
     end
 
@@ -46,6 +49,6 @@ If no value is found in the defined sources, it returns an empty string ('')
     value = lookupvar("::data::common::#{var_name}") if (value == :undefined || value == '')
     value = default_value if (value == :undefined || value == '')
     
-    return value
+    return Global::Utility.internalize(value)
   end
 end

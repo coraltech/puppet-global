@@ -5,16 +5,22 @@ module Global
     #---------------------------------------------------------------------------
     # Hash operations
     
-    def self.merge(hashes)
+    def self.merge(hashes, merge_arrays = false)
       value = {}
       return value unless hashes && hashes.is_a?(Array)
-            
-      hashes.each do |hash|
-        if hash && hash.is_a?(Hash)
-          value = recursive_merge(value, hash)  
-        end      
+      
+      begin
+        require 'coral-core'
+        value = Coral::Util::Data.merge(hashes, merge_arrays)
+        
+      rescue LoadError
+        hashes.each do |hash|
+          if hash && hash.is_a?(Hash)
+            value = recursive_merge(value, hash, merge_arrays)  
+          end      
+        end  
       end
-      return value
+      return internalize(value)
     end
     
     #---
@@ -50,6 +56,37 @@ module Global
         data = overrides
       end
       return data   
+    end
+    
+    #---
+    
+    def self.internalize(value)
+      result = value
+      
+      if value.is_a?(Array)
+        result = []
+        value.each do |item|
+          result << internalize(item)
+        end
+      
+      elsif value.is_a?(Hash)
+        result = {}
+        value.each do |key, item|
+          result[key] = internalize(item)
+        end
+          
+      elsif value.is_a?(String)
+        result = value
+        case value
+        when /^\s*(true|TRUE|True)\s*$/
+          result = true
+        when /^\s*(false|FALSE|False)\s*$/
+          result = false
+        when /^\s*(undef|UNDEF)\s*$/
+          result = nil
+        end
+      end
+      return result
     end
   end
 end

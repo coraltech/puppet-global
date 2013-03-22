@@ -4,16 +4,20 @@
 # This function performs a lookup for a variable value in various locations
 # following this order
 # - Hiera backend, if present (modulename prefix)
-# - ::data::common::varname
+# - ::data::common::{modulename}_{varname}
 # - ::modulename::default::varname
 # - {default parameter}
 #
 # Inspired by example42 -> params_lookup.rb
 #
+
+require File.join(File.dirname(__FILE__), 'utility')
+
 module Puppet::Parser::Functions
   newfunction(:module_param, :type => :rvalue, :doc => <<-EOS
 This function performs a lookup for a variable value in various locations following this order:
 - Hiera backend, if present (modulename prefix)
+- ::data::common::{modulename}_{varname}
 - ::modulename::default::varname
 - {default parameter}
 If no value is found in the defined sources, it returns an empty string ('')
@@ -48,6 +52,6 @@ If no value is found in the defined sources, it returns an empty string ('')
     value = lookupvar("::#{module_name}::default::#{var_name}") if ( value == :undefined || value == '' )
     value = default_value if ( value == :undefined || value == '' )
     
-    return value
+    return Global::Utility.internalize(value)
   end
 end

@@ -3,6 +3,7 @@
 #
 # See: global_param.rb
 #
+
 require File.join(File.dirname(__FILE__), 'utility')
 
 module Puppet::Parser::Functions
